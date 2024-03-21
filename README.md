@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @Avinashhh26
 - 👀 I’m interested in Coding
-- 🌱 I’m currently learning c,Phython,HTML,CSS
+- 🌱 I’m currently learning c,Python,HTML,CSS
 
 <!---
 Avinashhh26/Avinashhh26 is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
