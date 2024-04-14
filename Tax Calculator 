@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tax Calculation</title>
+    <style>
+        /* Add some styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .error-icon {
+            color: red;
+            display: none;
+            margin-left: 5px;
+        }
+
+        .error-icon:hover::after {
+            content: attr(data-error);
+            position: absolute;
+            background: yellow;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 12px;
+            white-space: nowrap;
+            top: -20px;
+            left: 0;
+        }
+
+        .result-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .result-modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Tax Calculation</h2>
+        <div class="input-group">
+            <label for="income">Gross Annual Income:</label>
+            <input type="number" id="income" required>
+            <span class="error-icon" id="income-error" data-error="Please enter a valid income">!</span>
+        </div>
+        <div class="input-group">
+            <label for="deductions">Deductions:</label>
+            <input type="number" id="deductions" required>
+            <span class="error-icon" id="deductions-error" data-error="Please enter valid deductions">!</span>
+        </div>
+        <div class="input-group">
+            <label for="age">Age:</label>
+            <select id="age" required>
+                <option value="">Select age group</option>
+                <option value="under40">&lt;40</option>
+                <option value="40to60">&ge;40 &amp; &lt;60</option>
+                <option value="over60">&ge;60</option>
+            </select>
+            <span class="error-icon" id="age-error" data-error="Please select an age group">!</span>
+        </div>
+        <button id="submitBtn">Submit</button>
+    </div>
+
+    <div class="result-modal" id="result-modal">
+        <div class="result-modal-content">
+            <h3>Tax Calculation Result</h3>
+            <p id="result-text"></p>
+            <button id="closeModalBtn">Close</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            // Hide error icons initially
+            document.getElementById('income-error').style.display = 'none';
+            document.getElementById('deductions-error').style.display = 'none';
+            document.getElementById('age-error').style.display = 'none';
+
+            // Get user input values
+            const income = parseFloat(document.getElementById('income').value);
+            const deductions = parseFloat(document.getElementById('deductions').value);
+            const ageGroup = document.getElementById('age').value;
+
+            // Validate inputs
+            let valid = true;
+            if (isNaN(income) || income < 0) {
+                document.getElementById('income-error').style.display = 'inline';
+                valid = false;
+            }
+            if (isNaN(deductions) || deductions < 0) {
+                document.getElementById('deductions-error').style.display = 'inline';
+                valid = false;
+            }
+            if (!ageGroup) {
+                document.getElementById('age-error').style.display = 'inline';
+                valid = false;
+            }
+
+            // If validation fails, stop
+            if (!valid) {
+                return;
+            }
+
+            // Calculate net income
+            const netIncome = income - deductions;
+
+            // Calculate tax based on net income and age group
+            let taxRate;
+            if (ageGroup === 'under40') {
+                taxRate = 0.3;
+            } else if (ageGroup === '40to60') {
+                taxRate = 0.4;
+            } else if (ageGroup === 'over60') {
+                taxRate = 0.1;
+            }
+
+            let tax = 0;
+            if (netIncome > 800000) {
+                tax = taxRate * (netIncome - 800000);
+            }
+
+            // Display result in modal
+            const resultText = `Age Group: ${ageGroup.replace(/&|;/g, '')} | Net Income: ${netIncome.toFixed(2)} | Tax: ${tax.toFixed(2)}`;
+            document.getElementById('result-text').innerText = resultText;
+            document.getElementById('result-modal').style.display = 'flex';
+        });
+
+        // Close modal
+        document.getElementById('closeModalBtn').addEventListener('click', function() {
+            document.getElementById('result-modal').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
